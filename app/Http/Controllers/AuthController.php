@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +35,29 @@ class AuthController extends Controller
 
         /// handle gagal validasi
         return back()->withErrors($credentials);
+    }
+
+    public function register(Request $request)
+    {
+        $validatedData = $request->validate([
+            'fullname' => 'required|min:3|max:100',
+            'username' => 'required|min:3|max:100|alpha_dash',
+            'email' => 'required|email:dns',
+            'address' => 'nullable',
+            'role' => 'required',
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|same:password',
+        ]);
+
+        /// jika data sesuai validasi
+        if ($validatedData) {
+            Staff::create($validatedData);
+
+            return redirect('/login')->with('register-success', 'Registrasi berhasil, silahkan login');
+        }
+
+        /// jika data tidak sesuai validasi
+        return back()->withErrors($validatedData);
     }
 
     public function logout(Request $request)
