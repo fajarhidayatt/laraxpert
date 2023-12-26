@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Staff extends Model
+/// [Login multiple table] 1. ubah model menjadi extends ke `Authenticatable`
+class Staff extends Authenticatable
 {
     use HasFactory;
 
@@ -16,5 +17,15 @@ class Staff extends Model
         'address',
         'role',
         'password'
+    ];
+
+    /// password auto hash ketika create data
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
+    /// menyembunyikan column password saat mengakses data staff
+    protected $hidden = [
+        'password',
     ];
 }

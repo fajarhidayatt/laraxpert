@@ -21,19 +21,20 @@ class AuthController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        /// cek apakah login berhasil
-        if (Auth::attempt($credentials)) {
-            /// re-generate session
+        /// [Login multiple table] 4. buat handle login untuk guard `web` (table users) dan guard `staff` (table staff)
+        /// nama guard berdasarkan array `guards` pada config/auth.php
+        if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
 
-            /// redirect ke dashboard
+            return redirect()->intended('/dashboard');
+        } else if (Auth::guard('staff')->attempt($credentials)) {
+            $request->session()->regenerate();
+
             return redirect()->intended('/dashboard');
         } else {
-            /// handle gagal login jika email atau password salah
             return back()->with('login-failed', 'Email atau password salah');
         }
 
-        /// handle gagal validasi
         return back()->withErrors($credentials);
     }
 

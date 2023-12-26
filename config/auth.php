@@ -40,6 +40,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        /// [Login multiple table] 3. tambahkan guard
+        /// nama guard bebas
+        'staff' => [
+            'driver' => 'session',
+            'provider' => 'staff', /// nama provider menyesuakikan dengan `providers`
+        ],
     ],
 
     /*
@@ -63,6 +70,12 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        /// [Login multiple table] 2. tambahkan provider
+        'staff' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Staff::class,
         ],
 
         // 'users' => [

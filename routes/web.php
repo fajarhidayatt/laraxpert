@@ -28,4 +28,5 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 /// Dashboard
-Route::view('/dashboard', 'dashboard')->middleware('auth');
+/// [Login multiple table] 5. jika menggunakan middleware auth, tambahkan juga nama guard seletah titik dua `:`, agar tidak mental
+Route::view('/dashboard', 'dashboard')->middleware('auth:staff,web');
