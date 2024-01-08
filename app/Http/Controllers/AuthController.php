@@ -15,11 +15,21 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        /// validasi input request
-        $credentials = $request->validate([
+        /// custom error message
+        $message = [
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Email tidak valid',
+            'password.required' => 'Password wajib diisi',
+        ];
+
+        /// rules validation
+        $rules = [
             'email' => 'required|email:dns',
-            'password' => 'required|min:6'
-        ]);
+            'password' => 'required'
+        ];
+
+        /// validasi input request
+        $credentials = $request->validate($rules, $message);
 
         /// [Login multiple table] 4. buat handle login untuk guard `web` (table users) dan guard `staff` (table staff)
         /// nama guard berdasarkan array `guards` pada config/auth.php
@@ -31,11 +41,17 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             return redirect()->intended('/dashboard');
-        } else {
-            return back()->with('login-failed', 'Email atau password salah');
         }
 
-        return back()->withErrors($credentials);
+        /// custom error message tambahan pada saat salah password
+        return back()->withErrors([
+            'password' => 'Password yang anda masukkan salah',
+        ])->onlyInput('email');
+
+        /// `onlyInput()` digunakan untuk mengembalikan input yang telah dimasukkan user
+        /// agar saat validasi error data yang dimasukkan tidak hilang.
+        /// gunakan `old()` pada blade untuk menampilkan data lama
+        /// value="{{ old('email') }}"
     }
 
     public function register(Request $request)
