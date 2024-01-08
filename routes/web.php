@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/login');
 
 /// Login
-Route::get('/login', [AuthController::class, 'loginView'])->middleware('guest'); /// hanya bisa diakses oleh pengguna yang belum login
+Route::get('/login', [AuthController::class, 'loginView'])->middleware('guest:staff,web'); /// hanya bisa diakses oleh pengguna yang belum login, jangan lupa tambahkan guard staff dan web
 Route::post('/login', [AuthController::class, 'login']);
 
 /// Register
